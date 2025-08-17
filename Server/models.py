@@ -1,3 +1,4 @@
+from pydantic import BaseModel
 from sqlalchemy import Column, Integer, String, TIMESTAMP
 from sqlalchemy.orm import DeclarativeBase
 from datetime import datetime
@@ -22,7 +23,7 @@ class RecordBase(Base):
     click_count: Column[int] = Column(Integer)
 
 
-class RecordCreate:
+class RecordCreate(BaseModel):
     """
     Класс - модель данных для добавления данных в таблицу
 
