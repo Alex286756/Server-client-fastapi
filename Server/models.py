@@ -1,20 +1,25 @@
 from sqlalchemy import Column, Integer, String, TIMESTAMP
-from sqlalchemy.orm import declarative_base
+from sqlalchemy.orm import DeclarativeBase
 from datetime import datetime
 
-Base = declarative_base()
+
+class Base(DeclarativeBase):
+    """
+    Декларативный класс
+    """
+    pass
 
 
 class RecordBase(Base):
     """
     Класс данных, которые хранятся в таблице Records.
     """
-    __tablename__ = 'Records'
+    __tablename__: str = 'Records'
 
-    id = Column(Integer, primary_key=True, index=True)
-    text = Column(String, nullable=False)
-    datetime = Column(TIMESTAMP)
-    click_count = Column(Integer)
+    id: Column[int] = Column(Integer, primary_key=True, index=True)
+    text: Column[String] = Column(String, nullable=False)
+    datetime: Column[datetime] = Column(TIMESTAMP)
+    click_count: Column[int] = Column(Integer)
 
 
 class RecordCreate:
