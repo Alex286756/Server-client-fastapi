@@ -1,7 +1,7 @@
 from typing import Any
 
 from pydantic import BaseModel, field_validator, ConfigDict
-from sqlalchemy import Column, Integer, String, TIMESTAMP
+from sqlalchemy import Column, Integer, String, DateTime
 from sqlalchemy.orm import DeclarativeBase
 from datetime import datetime, timedelta
 
@@ -21,7 +21,7 @@ class RecordBase(Base):
 
     id: Column[int] = Column(Integer, primary_key=True, index=True)
     text: Column[String] = Column(String, nullable=False)
-    datetime: Column[datetime] = Column(TIMESTAMP)
+    datetime: Column[DateTime] = Column(DateTime)
     click_count: Column[int] = Column(Integer)
 
 
