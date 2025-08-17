@@ -1,5 +1,6 @@
+import math
 from typing import Any
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 
 from Server.models.record_model import RecordCreate, RecordBase
 from Server.repositories.my_db import SessionLocal
@@ -23,5 +24,25 @@ async def create(record: RecordCreate) -> Any:
 
 
 @router.get('/list')
-async def list_all():
-    return "TODO list_all"
+async def list_all(page: int = 1, per_page: int = 10):
+    """
+    Получение списка элементов с поддержкой постраничной навигации.
+    :param page: Номер страницы
+    :param per_page: Количество записей на странице
+    :return: Список элементов
+    """
+    if per_page < 1:
+        raise HTTPException(status_code=400, detail="Количество элементов на страницу не может быть меньше 1")
+    if page < 1:
+        raise HTTPException(status_code=400, detail="Номер страницы не может быть меньше 1")
+
+    with SessionLocal() as session:
+        skip = (page - 1) * per_page
+        total_count = session.query(RecordBase).count()
+        max_pages = math.ceil(total_count / per_page) if total_count > 0 else 1
+
+        if page > max_pages:
+            raise HTTPException(status_code=400, detail="Указан неверный номер страницы")
+
+        result = session.query(RecordBase).offset(skip).limit(per_page).all()
+        return result
