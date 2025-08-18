@@ -19,8 +19,8 @@ class MainWindow(QMainWindow):
 
         central_widget: QWidget = QWidget()
         self.setCentralWidget(central_widget)
-        layout: QGridLayout = QtWidgets.QGridLayout()
-        central_widget.setLayout(layout)
+        self.layout: QGridLayout = QtWidgets.QGridLayout()
+        central_widget.setLayout(self.layout)
 
         self.label_edit: QLabel = QLabel("Введите текст:")
         self.line_edit: QLineEdit = QLineEdit()
@@ -33,7 +33,7 @@ class MainWindow(QMainWindow):
         self.list_view: QListView = QListView()
         self.button_get: QPushButton = QPushButton("Получить")
 
-        self.design_form(layout)
+        self.design_form(self.layout)
 
         self.click_count: int = 0
 
