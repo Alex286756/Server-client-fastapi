@@ -1,10 +1,11 @@
 import sys
 from datetime import datetime
+from typing import Any
 
 from PySide6 import QtWidgets
+from PySide6.QtGui import QStandardItemModel, QStandardItem
 from PySide6.QtWidgets import *
 import requests
-from fastapi import HTTPException
 from requests import Response
 
 
@@ -79,9 +80,35 @@ class MainWindow(QMainWindow):
             message_box.setText(f'{exception}')
             message_box.exec()
 
-    def get_data_from_server(self):
-        # TODO сделать метод запроса данных
-        pass
+    def get_data_from_server(self) -> None:
+        """
+        Получение записей из базы данных
+        """
+        try:
+            requests_text: str = (f'http://localhost:8000/records/list?page='
+                                  f'{self.num_page_edit.text()}&per_page={self.per_page_edit.text()}')
+            response: Response = requests.get(requests_text)
+
+            received_data: Any = response.json()
+
+            items: list[str] = [(f'id = {item['id']}, text = "{item['text']}", date&time = {item['datetime']},'
+                                 f'click on button: {item['click_count']}') for item in received_data]
+            model: QStandardItemModel = QStandardItemModel()
+
+            for item in items:
+                std_item = QStandardItem(item)
+                model.appendRow(std_item)
+            self.list_view.setModel(model)
+        except requests.exceptions.ConnectionError:
+            message_box = QMessageBox(self)
+            message_box.setWindowTitle('Ошибка отправки GET-запроса')
+            message_box.setText('Ошибка при подключении к серверу')
+            message_box.exec()
+        except Exception as exception:
+            message_box = QMessageBox(self)
+            message_box.setWindowTitle('Ошибка отправки GET-запроса')
+            message_box.setText(f'{exception}')
+            message_box.exec()
 
 
 if __name__ == "__main__":
