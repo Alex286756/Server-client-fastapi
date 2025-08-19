@@ -1,10 +1,10 @@
 import math
 from typing import Any
 from fastapi import APIRouter, HTTPException
-from pydantic.error_wrappers import ValidationError
+from pydantic import ValidationError
 from sqlalchemy.exc import IntegrityError, DatabaseError
 
-from Server.models.record_model import RecordCreate, RecordBase
+from Server.models.record_model import RecordCreate, RecordBase, RecordResponse
 from Server.repositories.my_db import SessionLocal
 
 router = APIRouter(prefix="/records")
@@ -23,12 +23,12 @@ async def create(record: RecordCreate) -> Any:
             session.add(new_record)
             session.commit()
             session.refresh(new_record)
-        return new_record
+        return RecordResponse.model_validate(new_record)
     except IntegrityError as database_error:
         session.rollback()
         raise HTTPException(status_code=400, detail=f'Нарушение целостности данных: {database_error}')
     except ValidationError as value_error:
-        raise HTTPException(status_code=422, detail=str(value_error))
+        raise HTTPException(status_code=422, detail=f'Валидация не прошла: {str(value_error)}')
     except Exception as exception:
         raise HTTPException(status_code=500, detail=f'Ошибка сервера: {exception}')
 
