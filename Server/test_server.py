@@ -22,7 +22,7 @@ def test_create_new_record(client: TestClient) -> None:
     response = client.post('/records/create',
                            json={
                                'text': 'Test Text',
-                               'datetime': datetime.now().strftime('YYYY-MM-DDTHH:MM:SS.SSS'),
+                               'datetime': "2025-08-17T17:56:00.030000",
                                'click_count': 1
                            })
     assert response.status_code == 200

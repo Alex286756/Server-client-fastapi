@@ -75,7 +75,7 @@ class RecordCreate(BaseModel):
         """
         if not isinstance(value, int):
             raise ValueError('Число нажатий на кнопку должно быть целочисленным')
-        if value < 0:
+        if value < 1:
             raise ValueError('Количество нажатий на кнопку не может быть меньше 1')
         return value
 
