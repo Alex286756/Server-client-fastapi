@@ -63,7 +63,7 @@ class MainWindow(QMainWindow):
         self.click_count += 1
         data_to_send: dict[str: str | int] = {
             "text": self.line_edit.text().strip(),
-            "datetime": datetime.now().strftime('YYYY-MM-DDTHH:MM:SS.SSS'),
+            "datetime": datetime.now().isoformat(),
             "click_count": self.click_count
         }
 
